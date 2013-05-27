@@ -523,7 +523,7 @@ book_death:
   model: book_death
   model_type: urdf
   position: [-9.29, 11.56, 1.4]
-  orientation: [0.034906585, 0, 3.341592654]
+  orientation: [0.034906585, 0, -2.617993878]
 
 book_romantiker:
   model: book_romantiker
