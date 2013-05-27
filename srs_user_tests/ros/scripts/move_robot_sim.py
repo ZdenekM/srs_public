@@ -46,6 +46,15 @@ def main():
     #rospy.sleep(26)
     
     sim = rospy.get_param('/use_sim_time')
+    per = rospy.get_param('~periodic')
+    
+    if per is True:
+        
+        rospy.loginfo('Script will periodically teleport robot in Gazebo.')
+        
+    else:
+        
+        rospy.loginfo('Script will teleport robot in Gazebo just once.')
     
     if sim is True:
         
@@ -115,7 +124,7 @@ def main():
     
     loc.pose.pose = pose
     loc.header.frame_id = "/map"
-    #loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942]
+    loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942] # this was commented... why???
     
     rospy.loginfo("Adjusting localization")
     pub.publish(loc)
@@ -133,8 +142,49 @@ def main():
       pub.publish(EmptyMsg())
       pub.publish(EmptyMsg())
       
-      rospy.spin()
+      r = rospy.Rate(0.04)
       
+      if not per:
+      
+        rospy.spin()
+        
+      else:
+      
+        while not rospy.is_shutdown():
+      
+            r.sleep()
+            
+            rospy.loginfo("Pausing physics")
+            try:
+                    
+              g_pause()
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+            
+              
+            rospy.loginfo("Moving robot")
+            try:
+                    
+              ret = g_set_state(state)
+              
+              print ret.status_message
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+              
+              
+            rospy.loginfo("Unpausing physics") 
+            try:
+                    
+              g_unpause()
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+          
     
 
 if __name__ == '__main__':
