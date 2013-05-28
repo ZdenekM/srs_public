@@ -46,6 +46,15 @@ def main():
     #rospy.sleep(26)
     
     sim = rospy.get_param('/use_sim_time')
+    per = rospy.get_param('~periodic')
+    
+    if per is True:
+        
+        rospy.loginfo('Script will periodically teleport robot in Gazebo.')
+        
+    else:
+        
+        rospy.loginfo('Script will teleport robot in Gazebo just once.')
     
     if sim is True:
         
@@ -109,12 +118,34 @@ def main():
       rospy.logerr('Error on calling service: %s',str(e))
       
     
+    l_pose = None
+    
+    if rospy.has_param('~localization'):
+        
+        rospy.loginfo('Using special localization pose')
+        
+        l_pose = Pose()
+    
+        l_pose.position.x = rospy.get_param('~localization/position_x')
+        l_pose.position.y = rospy.get_param('~localization/position_y')
+        l_pose.position.z = rospy.get_param('~localization/position_z')
+        
+        l_pose.orientation.x = rospy.get_param('~localization/orientation_x')
+        l_pose.orientation.y = rospy.get_param('~localization/orientation_y')
+        l_pose.orientation.z = rospy.get_param('~localization/orientation_z')
+        l_pose.orientation.w = rospy.get_param('~localization/orientation_w')
+        
+    else:
+        
+        rospy.loginfo('Using normal pose')
+        l_pose = pose
     
     
     loc = PoseWithCovarianceStamped()
     
-    loc.pose.pose = pose
+    loc.pose.pose = l_pose
     loc.header.frame_id = "/map"
+    loc.header.stamp = rospy.Time(0)
     #loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942]
     
     rospy.loginfo("Adjusting localization")
@@ -122,20 +153,63 @@ def main():
     pub.publish(loc)
     pub.publish(loc)
     
-    rospy.sleep(1)
+    rospy.sleep(0.5)
      
     if sim is True:
     
       rospy.loginfo('Simulation is completely ready, publishing to /sim_init topic')
       
-      pub = rospy.Publisher('/sim_init', EmptyMsg,latch=True)
-      pub.publish(EmptyMsg())
-      pub.publish(EmptyMsg())
-      pub.publish(EmptyMsg())
+      pub_s = rospy.Publisher('/sim_init', EmptyMsg,latch=True)
+      pub_s.publish(EmptyMsg())
+      pub_s.publish(EmptyMsg())
+      pub_s.publish(EmptyMsg())
       
-      rospy.spin()
+      r = rospy.Rate(0.02)
       
-    
+      if not per:
+      
+        rospy.spin()
+        
+      else:
+      
+        while not rospy.is_shutdown():
+      
+            r.sleep()
+            
+            rospy.loginfo("Pausing physics")
+            try:
+                    
+              g_pause()
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+            
+              
+            rospy.loginfo("Moving robot")
+            try:
+                    
+              ret = g_set_state(state)
+              
+              print ret.status_message
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+              
+              
+            rospy.loginfo("Unpausing physics") 
+            try:
+                    
+              g_unpause()
+                    
+            except Exception, e:
+                
+              rospy.logerr('Error on calling service: %s',str(e))
+              
+            rospy.loginfo("Adjusting localization")
+            pub.publish(loc)
+             
 
 if __name__ == '__main__':
   try:

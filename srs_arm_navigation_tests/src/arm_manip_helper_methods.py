@@ -52,7 +52,7 @@ class common_helper_methods():
         rospy.wait_for_service(srv,timeout=60)
         available = True
         
-    except ROSException, e:
+    except rospy.ROSException, e:
         
         rospy.logerr('Cannot set interaction mode for object %s, error: %s',object_name,str(e))  
         
@@ -75,7 +75,7 @@ class common_helper_methods():
     
         rospy.wait_for_message(topic, topic_type, timeout=60)
         
-    except ROSException, e:
+    except rospy.ROSException, e:
         
         rospy.logerr('Topic %s is not available! Error: %s',topic,e)
 

@@ -4,10 +4,12 @@
   <arg name="sim" default="false"/>
   <arg name="exp"/>
   <arg name="task"/>
+  <arg name="per"/> <!-- periodic "teleportation" of the simulated robot -->
 
   <group if="$(arg sim)"> 
     <node name="move_robot" pkg="srs_user_tests" type="move_robot_sim.py" respawn="false" output="screen">
       <rosparam file="$(find srs_user_tests)/ros/config/$(arg exp)/$(arg task)/robot_position_sim.yaml" command="load"/>
+      <param name="periodic" value="$(arg per)" type="bool"/>
     </node>
   </group>
 

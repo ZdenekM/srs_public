@@ -29,10 +29,14 @@ import roslib; roslib.load_manifest('srs_user_tests')
 import rospy
 from std_srvs.srv import Empty
 from gazebo_msgs.srv import GetModelState
+from tf import TransformListener
+from geometry_msgs.msg import PoseStamped, Vector3, Quaternion
 
 def main():
     
     rospy.init_node('get_robot_position')
+    
+    tf = TransformListener()
     
     g_get_state = rospy.ServiceProxy("/gazebo/get_model_state", GetModelState)
     
@@ -47,7 +51,24 @@ def main():
       rospy.logerr('Error on calling service: %s',str(e))
       return
   
+    print "\n"
+    print "Position from Gazebo:"
     print state.pose
+    
+    r_pose = PoseStamped()
+    
+    r_pose.header.stamp = rospy.Time(0)
+    r_pose.header.frame_id = '/base_link'
+    r_pose.pose.position = Vector3(0,0,0)
+    r_pose.pose.orientation = Quaternion(0,0,0,1)
+    
+    tf.waitForTransform('/map',r_pose.header.frame_id,rospy.Time(0), rospy.Duration(3.0))
+    r_pose = tf.transformPose('/map',r_pose)
+    
+    print "\n"
+    print "Position from localization:"
+    print r_pose.pose
+    print "\n"
   
 
 if __name__ == '__main__':

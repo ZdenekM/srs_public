@@ -6,11 +6,19 @@
   <arg name="cond"/>
   <arg name="sim"/>
   
+  <!-- move robot to proper position -->
+  <include file="$(find srs_user_tests)/ros/launch/move_robot.launch">
+    <arg name="exp"  value="$(arg exp)"/>
+    <arg name="task" value="$(arg task)"/>
+    <arg name="sim"  value="$(arg sim)"/>
+    <arg name="per" value="true"/> <!-- periodic "teleportation" of the simulated robot -->
+  </include>
+  
   <group if="$(arg sim)">
     
     <!-- prepare robot for manipulation tasks -->
     <node pkg="srs_user_tests" type="prepare_robot_manip_sim.py" name="prepare_robot_manip_sim" output="screen">
-      <param name="torso" value="front" type="string"/>
+      <param name="torso" value="home" type="string"/>
     </node>
     
   </group>
