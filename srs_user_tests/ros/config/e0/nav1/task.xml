@@ -6,6 +6,15 @@
   <arg name="cond"/>
   <arg name="sim"/>
 
+
+  <!-- move robot to proper position -->
+  <include file="$(find srs_user_tests)/ros/launch/move_robot.launch">
+    <arg name="exp"  value="$(arg exp)"/>
+    <arg name="task" value="$(arg task)"/>
+    <arg name="sim"  value="$(arg sim)"/>
+    <arg name="per" value="false"/> <!-- periodic "teleportation" of the simulated robot -->
+  </include>
+
   <group if="$(arg sim)">
     
     <!-- prepare robot for navigation tasks -->

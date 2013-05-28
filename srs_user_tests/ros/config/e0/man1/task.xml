@@ -5,6 +5,14 @@
   <arg name="task"/>
   <arg name="cond"/>
   <arg name="sim"/>
+  
+  <!-- move robot to proper position -->
+  <include file="$(find srs_user_tests)/ros/launch/move_robot.launch">
+    <arg name="exp"  value="$(arg exp)"/>
+    <arg name="task" value="$(arg task)"/>
+    <arg name="sim"  value="$(arg sim)"/>
+    <arg name="per" value="true"/> <!-- periodic "teleportation" of the simulated robot -->
+  </include>
 
   <group if="$(arg sim)">
     
@@ -13,9 +21,9 @@
       <param name="torso" value="back" type="string"/>
     </node>
     
-    <node name="move_robot_e0man1" pkg="srs_user_tests" type="move_robot_sim_e0man1.py" respawn="false" output="screen">
+    <!--node name="move_robot_e0man1" pkg="srs_user_tests" type="move_robot_sim_e0man1.py" respawn="false" output="screen">
       <rosparam file="$(find srs_user_tests)/ros/config/$(arg exp)/$(arg task)/robot_position_sim.yaml" command="load"/>
-    </node>
+    </node-->
 
   </group>
   
