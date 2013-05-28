@@ -1,19 +1,21 @@
-position_x: -9.56225251717
-position_y: 12.6703325685
-position_z: 0.0
+position_x: -9.48971747399
+position_y: 12.5279808753
+position_z: -0.00160882599954
 
-orientation_x: 0.0
-orientation_y: 0.0
-orientation_z: -0.710372782525
-orientation_w: -0.703825616905
+orientation_x: -3.58029286539e-06
+orientation_y: 6.3447066585e-06
+orientation_z: 0.704487071121
+orientation_w: 0.709716821394
 
 localization:
 
-  position_x: -9.90982996549
-  position_y: 12.5983389922
+  position_x: -9.93413076831
+  position_y: 12.3457479609
   position_z: 0.0
   
   orientation_x: 0.0
   orientation_y: 0.0
-  orientation_z: 0.716606040547
-  orientation_w: 0.697478159265 
+  orientation_z: 0.712408056099
+  orientation_w: 0.701765460539 
+  
+

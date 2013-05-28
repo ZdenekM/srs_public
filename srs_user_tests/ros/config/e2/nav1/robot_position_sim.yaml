@@ -1,8 +1,20 @@
-position_x: -3.55567964937
-position_y: 1.64756601225
-position_z: -0.00160927190157
+position_x: -3.67568781088
+position_y: 1.54414959656
+position_z: -0.00160853787452
 
-orientation_x: -3.36706136931e-06
-orientation_y: 4.85539207479e-06
-orientation_z: -0.924776546603
-orientation_w: 0.380510629047
+orientation_x: 3.4012302901e-07
+orientation_y: 7.53755071244e-06
+orientation_z: -0.928386909982
+orientation_w: 0.371615049906
+
+localization:
+
+  position_x: -3.67458560696
+  position_y: 1.53975483192
+  position_z: 0.0
+  
+  orientation_x: 0.0
+  orientation_y: 0.0
+  orientation_z: 0.924510305142
+  orientation_w: -0.381157048585 
+  
