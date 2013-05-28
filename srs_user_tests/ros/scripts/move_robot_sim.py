@@ -145,6 +145,7 @@ def main():
     
     loc.pose.pose = l_pose
     loc.header.frame_id = "/map"
+    loc.header.stamp = rospy.Time(0)
     #loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942]
     
     rospy.loginfo("Adjusting localization")
@@ -152,18 +153,18 @@ def main():
     pub.publish(loc)
     pub.publish(loc)
     
-    rospy.sleep(1)
+    rospy.sleep(0.5)
      
     if sim is True:
     
       rospy.loginfo('Simulation is completely ready, publishing to /sim_init topic')
       
-      pub = rospy.Publisher('/sim_init', EmptyMsg,latch=True)
-      pub.publish(EmptyMsg())
-      pub.publish(EmptyMsg())
-      pub.publish(EmptyMsg())
+      pub_s = rospy.Publisher('/sim_init', EmptyMsg,latch=True)
+      pub_s.publish(EmptyMsg())
+      pub_s.publish(EmptyMsg())
+      pub_s.publish(EmptyMsg())
       
-      r = rospy.Rate(0.04)
+      r = rospy.Rate(0.02)
       
       if not per:
       
@@ -205,8 +206,10 @@ def main():
             except Exception, e:
                 
               rospy.logerr('Error on calling service: %s',str(e))
-          
-    
+              
+            rospy.loginfo("Adjusting localization")
+            pub.publish(loc)
+             
 
 if __name__ == '__main__':
   try:
