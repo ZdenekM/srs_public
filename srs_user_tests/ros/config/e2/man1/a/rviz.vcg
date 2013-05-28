@@ -86,7 +86,7 @@ Kinect\ FOV.Enabled=1
 Kinect\ FOV.Position\ Transformer=XYZ
 Kinect\ FOV.Selectable=1
 Kinect\ FOV.Style=3
-Kinect\ FOV.Topic=/cam3d_throttled/depth_registered/points
+Kinect\ FOV.Topic=/cam3d_throttled/depth_registered/points_noised
 Kinect\ FOV..AxisAutocompute\ Value\ Bounds=1
 Kinect\ FOV..AxisAxis=2
 Kinect\ FOV..AxisMax\ Value=10
@@ -218,8 +218,8 @@ Robot.Visual\ Enabled=1
 Tool\ 2D\ Nav\ GoalTopic=move_base_simple/goal
 Tool\ 2D\ Pose\ EstimateTopic=initialpose
 Camera\ Type=rviz::OrbitViewController
-Camera\ Config=1.001 6.23719 1.65066 1.00072 0.821556 -10.157
-Property\ Grid\ State=selection=RGB Video.Enabled.RGB Video.Transport Hint;expanded=RGB Video.Enabled,Robot.Enabled.Robot.StatusTopStatus,Robot.Enabled.Robot: RobotLinks,Collision Indicator.Enabled.Collision Indicator.StatusTopStatus,Collision Indicator.Enabled.Collision Indicator.Namespaces,Laser Scan Front.Enabled.Laser Scan Front.StatusTopStatus,Laser Scan Rear.Enabled.Laser Scan Rear.StatusTopStatus,Laser Scan Top.Enabled.Laser Scan Top.StatusTopStatus,RViz Camera Pose Publisher.Enabled.RViz Camera Pose Publisher.StatusTopStatus,In-Scene Teleop.Enabled.In-Scene Teleop.StatusTopStatus,1_CButArmNavDisplay.Enabled.1_CButArmNavDisplay.StatusTopStatus,3_CButBBEstimationDisplay.Enabled.3_CButBBEstimationDisplay.StatusTopStatus,2_CButGraspingDisplay.Enabled.2_CButGraspingDisplay.StatusTopStatus,Arm Nav Markers.Enabled.Arm Nav Markers.StatusTopStatus,Arm Nav Markers 2.Enabled.Arm Nav Markers 2.Namespaces,Planning Scene.Enabled.Planning Scene.Namespaces,Arm Nav Markers 3.Enabled.Arm Nav Markers 3.Namespaces,BB ideal pose.Enabled.BB ideal pose.StatusTopStatus,BB ideal pose.Enabled.BB ideal pose.Namespaces;scrollpos=0,0;splitterpos=261,522;ispageselected=1
+Camera\ Config=1.006 0.629007 2.11134 0.413217 0.774169 -2.50966
+Property\ Grid\ State=selection=;expanded=RGB Video.Enabled,Robot.Enabled.Robot.StatusTopStatus,Robot.Enabled.Robot: RobotLinks,Collision Indicator.Enabled.Collision Indicator.StatusTopStatus,Collision Indicator.Enabled.Collision Indicator.Namespaces,Laser Scan Front.Enabled.Laser Scan Front.StatusTopStatus,Laser Scan Rear.Enabled.Laser Scan Rear.StatusTopStatus,Laser Scan Top.Enabled.Laser Scan Top.StatusTopStatus,RViz Camera Pose Publisher.Enabled.RViz Camera Pose Publisher.StatusTopStatus,In-Scene Teleop.Enabled.In-Scene Teleop.StatusTopStatus,1_CButArmNavDisplay.Enabled.1_CButArmNavDisplay.StatusTopStatus,3_CButBBEstimationDisplay.Enabled.3_CButBBEstimationDisplay.StatusTopStatus,2_CButGraspingDisplay.Enabled.2_CButGraspingDisplay.StatusTopStatus,Arm Nav Markers.Enabled.Arm Nav Markers.StatusTopStatus,Arm Nav Markers 2.Enabled.Arm Nav Markers 2.Namespaces,Planning Scene.Enabled.Planning Scene.Namespaces,Arm Nav Markers 3.Enabled.Arm Nav Markers 3.Namespaces,BB ideal pose.Enabled.BB ideal pose.StatusTopStatus,BB ideal pose.Enabled.BB ideal pose.Namespaces;scrollpos=0,0;splitterpos=248,496;ispageselected=1
 [Display0]
 Name=RGB Video
 Package=rviz
