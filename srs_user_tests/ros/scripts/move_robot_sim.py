@@ -118,13 +118,34 @@ def main():
       rospy.logerr('Error on calling service: %s',str(e))
       
     
+    l_pose = None
+    
+    if rospy.has_param('~localization'):
+        
+        rospy.loginfo('Using special localization pose')
+        
+        l_pose = Pose()
+    
+        l_pose.position.x = rospy.get_param('~localization/position_x')
+        l_pose.position.y = rospy.get_param('~localization/position_y')
+        l_pose.position.z = rospy.get_param('~localization/position_z')
+        
+        l_pose.orientation.x = rospy.get_param('~localization/orientation_x')
+        l_pose.orientation.y = rospy.get_param('~localization/orientation_y')
+        l_pose.orientation.z = rospy.get_param('~localization/orientation_z')
+        l_pose.orientation.w = rospy.get_param('~localization/orientation_w')
+        
+    else:
+        
+        rospy.loginfo('Using normal pose')
+        l_pose = pose
     
     
     loc = PoseWithCovarianceStamped()
     
-    loc.pose.pose = pose
+    loc.pose.pose = l_pose
     loc.header.frame_id = "/map"
-    loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942] # this was commented... why???
+    #loc.pose.covariance = [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942]
     
     rospy.loginfo("Adjusting localization")
     pub.publish(loc)

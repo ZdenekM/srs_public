@@ -1,8 +1,19 @@
 position_x: -9.56225251717
 position_y: 12.6703325685
-position_z: -0.00160825158626
+position_z: 0.0
 
-orientation_x: -5.13464321545e-05
-orientation_y: -9.05510907075e-05
+orientation_x: 0.0
+orientation_y: 0.0
 orientation_z: -0.710372782525
 orientation_w: -0.703825616905
+
+localization:
+
+  position_x: -9.90982996549
+  position_y: 12.5983389922
+  position_z: 0.0
+  
+  orientation_x: 0.0
+  orientation_y: 0.0
+  orientation_z: 0.716606040547
+  orientation_w: 0.697478159265 
