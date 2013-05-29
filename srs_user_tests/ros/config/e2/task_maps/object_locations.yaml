@@ -196,7 +196,7 @@ table_ikea:
 Stuhl_borje:
   model: Stuhl_borje
   model_type: urdf
-  position: [2.73, 0.58, 0.00]
+  position: [3.1, 0.45, 0.00]
   orientation: [0, 0, -0.785398164]
 
 Stuhl_borje2:
@@ -283,14 +283,14 @@ thick_candle:
 beer_hofbraeu:
   model: beer_hofbraeu
   model_type: urdf
-  position: [-5.43, 0.37, 0.87]
+  position: [-5.50, 0.3, 0.87]
   orientation: [0, 0, 0]
 
 pizza_box:
   model: pizza_box
   model_type: urdf
-  position: [-5.83, 0.74, 0.88]
-  orientation: [0, 0, -0.872664626]
+  position: [-5.81, 0.78, 0.88]
+  orientation: [0, 0, -1,1902766034]
 
 couch:
   model: couch
@@ -552,7 +552,7 @@ book_pferdewitze:
 picture_frame:
   model: picture_frame
   model_type: urdf
-  position: [-9.18, 11.57, 0.87]
+  position: [-9.18, 11.47, 0.87]
   orientation: [0, 0, 2.00712864]
 
 brown_basket:
@@ -564,7 +564,7 @@ brown_basket:
 blanket_colored:
   model: blanket_colored
   model_type: urdf
-  position: [-9.59, 11.62, 0.65]
+  position: [-9.57, 11.54, 0.65]
   orientation: [0, 0, 1.570796327]
 
 wooden_box:

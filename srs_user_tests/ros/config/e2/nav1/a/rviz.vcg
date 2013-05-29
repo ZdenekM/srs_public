@@ -67,7 +67,7 @@ Kinect\ FOV.Enabled=1
 Kinect\ FOV.Position\ Transformer=XYZ
 Kinect\ FOV.Selectable=1
 Kinect\ FOV.Style=0
-Kinect\ FOV.Topic=/cam3d_throttled/depth_registered/points
+Kinect\ FOV.Topic=/cam3d_throttled/depth_registered/points_noised
 Kinect\ FOV..AxisAutocompute\ Value\ Bounds=1
 Kinect\ FOV..AxisAxis=2
 Kinect\ FOV..AxisMax\ Value=10
@@ -297,8 +297,8 @@ Robot\:\ Robot\ Link\ tray_right_linkShow\ Trail=0
 Tool\ 2D\ Nav\ GoalTopic=move_base_simple/goal
 Tool\ 2D\ Pose\ EstimateTopic=initialpose
 Camera\ Type=rviz::OrbitViewController
-Camera\ Config=0.986 3.77763 6.02731 3.78223 0.302807 -2.35907
-Property\ Grid\ State=selection=;expanded=Collision Indicator.Enabled.Collision Indicator.Namespaces,RViz Camera Pose Publisher.Enabled.RViz Camera Pose Publisher.StatusTopStatus,In-Scene Teleop.Enabled.In-Scene Teleop.StatusTopStatus;scrollpos=0,0;splitterpos=248,496;ispageselected=1
+Camera\ Config=0.971 4.309 5.82625 -0.800656 0.358162 5.57956
+Property\ Grid\ State=selection=Kinect FOV.Enabled.Kinect FOV.Topic;expanded=RGB Video.Enabled,Kinect FOV.Enabled,Collision Indicator.Enabled.Collision Indicator.Namespaces,RViz Camera Pose Publisher.Enabled.RViz Camera Pose Publisher.StatusTopStatus,In-Scene Teleop.Enabled.In-Scene Teleop.StatusTopStatus;scrollpos=0,0;splitterpos=248,496;ispageselected=1
 [Display0]
 Name=RGB Video
 Package=rviz
