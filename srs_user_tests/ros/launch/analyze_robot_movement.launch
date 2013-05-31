@@ -7,7 +7,7 @@
   <arg name="id"/>
   <arg name="start"/>
   <arg name="end"/>
-  <arg name="path" default="$(find srs_user_tests)/logs/"/>
+  <arg name="path" default="$(find srs_user_tests)/data/logs/"/>
   <arg name="debug" default="false"/>
   
   <param name="/use_sim_time" value="false" />

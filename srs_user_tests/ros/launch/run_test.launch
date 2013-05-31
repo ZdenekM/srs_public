@@ -38,6 +38,13 @@
       <arg name="sim"  value="$(arg sim)"/>
     </include>
   
+    <!-- screenshot logging on Gazebo machine -->  
+    <group if="$(arg log)">
+  
+      <node name="screenshotscript" pkg="srs_user_tests" type="screenshot_script.sh" output="screen" args="$(find srs_user_tests)/data/logs/$(arg id)/$(arg exp)/$(arg task)/$(arg cond)/sim"/>
+  
+    </group>
+  
   </group>
   
   
