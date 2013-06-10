@@ -12,6 +12,7 @@ import sys
 from geometry_msgs.msg import PoseStamped
 
 class TfEval(object):
+        
     
     def __init__(self, def_frame_1='/map', def_frame_2='/rviz_cam', def_bag_file_dir=''):
         
@@ -31,7 +32,14 @@ class TfEval(object):
         self.start_time = rospy.Time(rospy.get_param('~start_time',0.0))
         self.end_time = rospy.Time(rospy.get_param('~end_time',0.0))
         
+        self.bag_filename = None
+        
         self.cache_dur = rospy.Duration(0.0)
+        
+        self.first_attempt = True
+        
+        self.notes = ""
+        self.req_dur = self.end_time - self.start_time
         
         self.listener = tf.TransformListener()
         
@@ -43,21 +51,49 @@ class TfEval(object):
             
         self.bag_file_dir = self.path + self.id + '/' + self.exp + '/' + self.task + '/' + self.cond + '/'
         
+        if os.path.isfile(self.path + self.output_file):
+        
+            self.csv = open(self.path + self.output_file,'a')
+            
+        else:
+            
+            rospy.loginfo('Creating new CSV file.')
+            self.csv = open(self.path + self.output_file,'w')
+            self.csv.write('filename;id;experiment;task;condition;req_start;req_end;req_duration;real_start;real_end;real_dur;frame_in_motion;path_len;rotations;notes\n')
+        
+        
+        
         if not os.path.isdir(self.bag_file_dir):
             
-            rospy.logerr('Directory (%s) does not exist.',self.bag_file_dir)
+            str = 'Directory ' + str(self.bag_file_dir) + 'does not exist.'
+            self.notes += str
+            rospy.logerr(str)
+            self.write_csv()
+            self.csv.close()
             sys.exit()
         
         fn = glob.glob(self.bag_file_dir + '*.bag')
         
         if len(fn) == 0:
             
-            rospy.logerr('There is no bag file (%s)',self.bag_file_dir)
+            str = 'There is no bag file in ' + self.bag_file_dir + '.'
+            
+            self.notes += str
+            rospy.logerr(str)
+            self.write_csv()
+            self.csv.close()
+            
             sys.exit()
             
         if len(fn) > 1:
             
-            rospy.logerr("There are more bag files in the directory! Don't know which one to analyze.")
+            str = "There are more bag files in the directory! Don't know which one to analyze."
+            
+            self.notes += str
+            rospy.logerr(str)
+            self.write_csv()
+            self.csv.close()
+            
             sys.exit()
             
         self.bag_filename = fn[0]
@@ -68,18 +104,41 @@ class TfEval(object):
             
         except rosbag.ROSBagException:
             
-            msg = 'Error on openning bag file (' + self.bag_filename + ')' 
+            msg = 'Error on openning bag file (' + self.bag_filename + ').' 
             rospy.logerr(msg)
+            
+            self.notes += msg
+            self.write_csv()
+            self.csv.close()
+            
             rospy.signal_shutdown(msg)
             sys.exit()
             
         except rosbag.ROSBagFormatException:
             
-            msg = 'Bag file is corrupted.'
+            msg = "Bag file is corrupted and can't be open."
             rospy.logerr(msg)
+            
+            self.notes += msg
+            self.write_csv()
+            self.csv.close()
+            
             rospy.signal_shutdown(msg)
             sys.exit()
             
+            
+        if self.start_time.to_sec() > self.end_time.to_sec():
+            
+            msg = "Requested start time is higher then end time."
+            rospy.logerr(msg)
+            
+            self.notes += msg
+            self.write_csv()
+            self.csv.close()
+            
+            rospy.signal_shutdown(msg)
+            sys.exit()
+     
         self.started = False
         
         self.pose = PoseStamped()
@@ -102,17 +161,7 @@ class TfEval(object):
         
         
         self.timer_trig = False
-        
-        if os.path.isfile(self.path + self.output_file):
-        
-            self.csv = open(self.path + self.output_file,'a')
-            
-        else:
-            
-            rospy.loginfo('Creating new CSV file.')
-            self.csv = open(self.path + self.output_file,'w')
-            self.csv.write('id;experiment;task;condition;start;end;changes;total;path_len;rotations\n')
-        
+    
         #rospy.Timer(self.timer_period, self.timer)
         
         rospy.loginfo('Initialized with %s and %s frames.',self.frame_1,self.frame_2)
@@ -125,6 +174,19 @@ class TfEval(object):
         self.intgr = 0
         self.change = False
         self.last_path_len = 0.0
+        
+        
+    def write_csv(self,real_start=-1,real_end=-1,real_dur=-1,frame_in_motion=-1,path_len=-1,rotations=-1):
+        
+        if self.bag_filename is None:
+            
+            fn = self.bag_file_dir + "xxx"
+            
+        else:
+            
+            fn = self.bag_filename
+        
+        self.csv.write(fn + ';' + self.id + ';' + self.exp + ';' + self.task + ';' + self.cond + ';' + str(self.start_time.to_sec()) + ';' + str(self.end_time.to_sec()) + ';' + str(self.req_dur.to_sec()) + ';' + str(real_start) + ';' + str(real_end) + ';' + str(real_dur) + ';' + str(frame_in_motion) + ';' + str(path_len) + ';' + str(rotations) + ';' + self.notes + '\n')
         
         
     def readBag(self,start,end,start_pose=None):
@@ -157,6 +219,7 @@ class TfEval(object):
         
         changes = rospy.Duration(0)
         
+        
         if self.debug:
             
             rospy.loginfo('Request for analysis from: %s, to: %s.',str(round(start.to_sec(),2)), str(round(end.to_sec(),2)))
@@ -167,8 +230,10 @@ class TfEval(object):
                     
                     end_real = t
                     
+                    
                     if rospy.is_shutdown():
                         
+                        rospy.loginfo("Analysis canceled...")
                         break
                         
                     try:
@@ -182,6 +247,16 @@ class TfEval(object):
                             rospy.logwarn('Strange TF msg.')
                             
                         pass
+                    
+                    if self.first_attempt is True:
+                        
+                        if start.to_sec() < t.to_sec():
+                            
+                            msg = "Requested start time (" + str(start.to_sec()) + ") is too low! First msg available at " + str(t.to_sec()) + ". "
+                            self.notes += msg
+                            rospy.logwarn(msg) 
+                        
+                        self.first_attempt = False
                         
                     #rospy.sleep(0.001)
                     
@@ -287,25 +362,35 @@ class TfEval(object):
                         
         except rosbag.ROSBagFormatException:
             
+            msg = "Bag file format corrupted around " + str(round(end_real.to_sec(),2)) + ". "
+            self.notes += msg
+            
             if self.debug:
                 
-                rospy.logerr("Bag file format corrupted around %s.",str(round(end_real.to_sec(),2)))
+                rospy.logerr(msg)
                 
             error = True
         
         except roslib.message.DeserializationError:
             
+            msg = 'Bag file deserialization error around ' + str(round(end_real.to_sec(),2)) + '. '
+            self.notes += msg
+            
             if self.debug:
             
-                rospy.logerr('Bag file deserialization error around %s.',str(round(end_real.to_sec(),2)))
+                rospy.logerr(msg)
+                
                 
             error = True
             
         except:
             
+            msg = 'Some other error around ' + str(round(end_real.to_sec(),2)) + '. '
+            self.notes += msg
+            
             if self.debug:
             
-                rospy.logerr('Some other error around %s.',str(round(end_real.to_sec(),2)))
+                rospy.logerr(msg)
                 
             error = True
             
@@ -350,6 +435,8 @@ class TfEval(object):
                
         rospy.loginfo('Finished (%d errors).',errors)
         
+        self.notes += 'No. of errors: ' + str(errors) + '. '
+        
         tot = str(round(dur.to_sec(),2))
         ch = str(round(schanges.to_sec(),2))
         
@@ -359,11 +446,15 @@ class TfEval(object):
             rospy.loginfo('Total duration: ' + tot + 's')
             rospy.loginfo('Changes:' + ch + 's, path length: ' + str(round(spath_len,2)) + 'm, rotations: ' + str(round(srotations,2)) + 'rads.' )
             
-            self.csv.write(self.id + ';' + self.exp + ';' + self.task + ';' + self.cond + ';' + str(fstart_real.to_sec()) + ';' + str(end_real.to_sec()) + ';' + ch + ';' + tot + ';' + str(round(spath_len,2)) + ';' + str(round(srotations,2)) + '\n')
+            self.write_csv(fstart_real.to_sec(), end_real.to_sec(), tot, ch, round(spath_len,2), round(srotations,2))
             
         else:
             
-            rospy.logwarn("Can't compute anything. One of the frames was probably not available.")
+            msg = "Can't compute anything. One of the frames was probably not available."
+            self.notes += msg
+            self.write_csv()
+            
+            rospy.logwarn(msg)
         
         
         self.csv.close()
