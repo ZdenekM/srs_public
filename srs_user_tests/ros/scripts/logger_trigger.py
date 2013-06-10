@@ -27,14 +27,14 @@
 #
 import roslib; roslib.load_manifest('srs_user_tests')
 import rospy
-from std_srvs.srv import Empty
+from cob_srvs.srv import Trigger
 
 
 def main():
     
     rospy.init_node('logger_trigger_node')
     
-    s_log = rospy.ServiceProxy("/logger/start", Empty)
+    s_log = rospy.ServiceProxy("/logger/start", Trigger)
     
     rospy.loginfo("Waiting for logger...")
 

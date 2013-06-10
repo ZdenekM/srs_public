@@ -11,4 +11,6 @@
     <param name="bag_path" value="logs/$(arg id)/$(arg exp)/$(arg task)/$(arg cond)/"/>
   </node>
   
+  <node name="logger_trigger" pkg="srs_user_tests" type="logger_trigger" output="screen"/>
+  
 </launch>

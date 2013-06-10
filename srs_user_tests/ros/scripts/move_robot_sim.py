@@ -33,7 +33,7 @@ from gazebo_msgs.srv import SetModelState
 from gazebo_msgs.msg import ModelState
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from std_msgs.msg import Empty as EmptyMsg
-
+from cob_srvs.srv import Trigger
 
 def main():
     
@@ -163,6 +163,25 @@ def main():
       pub_s.publish(EmptyMsg())
       pub_s.publish(EmptyMsg())
       pub_s.publish(EmptyMsg())
+      
+      rospy.sleep(2)
+      
+      # automatic start of logging
+      s_log = rospy.ServiceProxy("/logger/start", Trigger)
+    
+      rospy.loginfo("Waiting for logger...")
+      rospy.wait_for_service("/logger/start")
+
+      rospy.loginfo("Starting logging")
+      
+      try:
+              
+        s_log()
+              
+      except Exception, e:
+          
+        rospy.logerr('Error on calling service: %s',str(e))
+
       
       r = rospy.Rate(0.033) # once per 30s
       

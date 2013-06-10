@@ -64,6 +64,7 @@ import rospy
 
 import rosbag
 from std_msgs.msg import Int32, String
+from std_msgs.msg import Empty as EmptyMsg
 
 import tf
 from tf.msg import *
@@ -90,6 +91,7 @@ import sys, subprocess
 import record_topic
 
 import global_lock
+
 
 class topics_bag():
 
@@ -123,8 +125,22 @@ class topics_bag():
         self.tfMsg = tfMessage()
         
         rospy.sleep(2)
+        
+        sim = rospy.get_param('/use_sim_time')
+        
+        if sim is True:
+        
+          rospy.loginfo("Waiting for simulation to be inited.")
+          rospy.wait_for_message('/sim_init',EmptyMsg)
+        
         # waits for a tf transform before starting. This is important to check if
         # the system is fully functional.
+        while not (self.tfL.frameExists(self.wanted_tfs[0]["reference_frame"]) and self.wanted_tfs[0]["target_frame"]):
+        
+          rospy.loginfo("Waiting for TF frames.")
+          rospy.sleep(2)
+        
+        rospy.loginfo("TF frames are available")
         
         self.tfL.waitForTransform(self.wanted_tfs[0]["reference_frame"], self.wanted_tfs[0]["target_frame"], rospy.Time(0), rospy.Duration(4.0))
         
