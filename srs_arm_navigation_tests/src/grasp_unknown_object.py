@@ -32,6 +32,7 @@ import smach
 import smach_ros
 from arm_manip_generic_states import *
 from assisted_grasping_generic_states import *
+from std_msgs.msg import Empty as EmptyMsg
 #from simulate_dm import *
 #import actionlib
 #from geometry_msgs.msg import Pose
@@ -42,6 +43,17 @@ def main():
   
   rospy.init_node('fake_dm_grasping', log_level=rospy.DEBUG)
   rospy.loginfo("Script for testing generic state for grasping of unknown object")
+  
+  
+  sim = rospy.get_param('/use_sim_time')
+  wait_for_sim = rospy.get_param('~wait_for_sim')
+  
+  if sim and wait_for_sim:
+  
+    rospy.loginfo("Waiting for simulation to be initialized.")
+    rospy.wait_for_message('/sim_init',EmptyMsg)
+    rospy.loginfo("Let's trigger grasping...")
+    
   
   # sm_to = move_arm_to_given_positions_assisted()
   

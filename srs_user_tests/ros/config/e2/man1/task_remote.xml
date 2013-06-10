@@ -19,5 +19,10 @@
     <param name="is_video_flipped" type="bool" value="true"/>
     <param name="wait_for_start" type="bool" value="true" />
   </node>
+  
+  <!-- trigger grasping -->
+  <include file="$(find srs_arm_navigation_tests)/launch/grasp_object.launch">
+    <arg name="wait" value="true"/>
+  </include>
 
 </launch>
