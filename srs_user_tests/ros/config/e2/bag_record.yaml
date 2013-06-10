@@ -1,6 +1,6 @@
 ################
 # continuous recording
-continuous_topics: [/tf, /joint_states, /spacenav/offset, /spacenav/rot_offset]
+continuous_topics: [/tf]
 
 ################
 # triggered recording
