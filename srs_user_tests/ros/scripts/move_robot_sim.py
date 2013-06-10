@@ -164,7 +164,7 @@ def main():
       pub_s.publish(EmptyMsg())
       pub_s.publish(EmptyMsg())
       
-      r = rospy.Rate(2.0) # was 0.02
+      r = rospy.Rate(0.033) # once per 30s
       
       if not per:
       
