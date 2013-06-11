@@ -142,7 +142,13 @@ class topics_bag():
         
         rospy.loginfo("TF frames are available")
         
-        self.tfL.waitForTransform(self.wanted_tfs[0]["reference_frame"], self.wanted_tfs[0]["target_frame"], rospy.Time(0), rospy.Duration(4.0))
+        try:
+        
+            self.tfL.waitForTransform(self.wanted_tfs[0]["reference_frame"], self.wanted_tfs[0]["target_frame"], rospy.Time(0), rospy.Duration(4.0))
+            
+        except tf.Exception:
+            
+            rospy.logwarn("TF exception on startup.")
         
         # dictionaries for storing current translation and rotation for the specific
         # frames
@@ -184,8 +190,15 @@ class topics_bag():
         # sequence for calculating distance and yaw rotation for defining if a 
         # recording trigger is set according to the trigger value on the yaml file
         
-        self.tfL.waitForTransform(reference_frame, target_frame, rospy.Time(0), rospy.Duration(3.0))
-        trans, rot = self.tfL.lookupTransform(reference_frame, target_frame, rospy.Time(0))
+        try:
+        
+            self.tfL.waitForTransform(reference_frame, target_frame, rospy.Time(0), rospy.Duration(3.0))
+            trans, rot = self.tfL.lookupTransform(reference_frame, target_frame, rospy.Time(0))
+            
+        except tf.Exception:
+            
+            rospy.logerr("TF exception!")
+            return "not_triggered"
         
         x = trans[0] - self.current_translation[target_frame][0]
         y = trans[1] - self.current_translation[target_frame][1]

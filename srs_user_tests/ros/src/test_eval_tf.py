@@ -272,7 +272,7 @@ class TfEval(object):
                             frames_checked = True
                             if self.debug:
                             
-                                rospy.loginfo('Both TF frames are available. Caching TF...')
+                                rospy.loginfo('Both TF frames are available (%s). Caching TF...',str(t.to_sec()))
                             
                         else:
                             
@@ -302,7 +302,7 @@ class TfEval(object):
                             
                             if self.debug: 
                                 
-                                rospy.logwarn("Can't transform.")
+                                rospy.logwarn("Can't transform (%s).",str(t.to_sec()))
                                 
                             continue
                         
