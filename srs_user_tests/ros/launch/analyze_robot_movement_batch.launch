@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="path" default="$(find srs_user_tests)/data/logs/"/>
+  
+  <param name="/use_sim_time" value="false" />
+  
+  <node pkg="srs_user_tests" name="tf_eval_batch" type="test_eval_tf_batch.py" output="screen">
+    <param name="path" value="$(arg path)"/> 
+    <param name="analysis_launch" value="analyze_robot_movement"/>  
+    <param name="input_file" value="robot_movement_input.csv"/>
+  </node>
+
+</launch>

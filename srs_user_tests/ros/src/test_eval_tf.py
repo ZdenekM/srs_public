@@ -65,9 +65,9 @@ class TfEval(object):
         
         if not os.path.isdir(self.bag_file_dir):
             
-            str = 'Directory ' + str(self.bag_file_dir) + 'does not exist.'
-            self.notes += str
-            rospy.logerr(str)
+            msg = 'Directory ' + str(self.bag_file_dir) + 'does not exist.'
+            self.notes += msg
+            rospy.logerr(msg)
             self.write_csv()
             self.csv.close()
             sys.exit()
@@ -76,10 +76,10 @@ class TfEval(object):
         
         if len(fn) == 0:
             
-            str = 'There is no bag file in ' + self.bag_file_dir + '.'
+            msg = 'There is no bag file in ' + self.bag_file_dir + '.'
             
-            self.notes += str
-            rospy.logerr(str)
+            self.notes += msg
+            rospy.logerr(msg)
             self.write_csv()
             self.csv.close()
             
@@ -87,10 +87,10 @@ class TfEval(object):
             
         if len(fn) > 1:
             
-            str = "There are more bag files in the directory! Don't know which one to analyze."
+            msg = "There are more bag files in the directory! Don't know which one to analyze."
             
-            self.notes += str
-            rospy.logerr(str)
+            self.notes += msg
+            rospy.logerr(msg)
             self.write_csv()
             self.csv.close()
             
@@ -233,7 +233,9 @@ class TfEval(object):
                     
                     if rospy.is_shutdown():
                         
-                        rospy.loginfo("Analysis canceled...")
+                        msg = "Analysis canceled. "
+                        self.notes += msg
+                        rospy.loginfo(msg)
                         break
                         
                     try:
@@ -250,9 +252,11 @@ class TfEval(object):
                     
                     if self.first_attempt is True:
                         
-                        if start.to_sec() < t.to_sec():
+                        dif = t - start
+                        
+                        if dif > rospy.Duration(0.01):
                             
-                            msg = "Requested start time (" + str(start.to_sec()) + ") is too low! First msg available at " + str(t.to_sec()) + ". "
+                            msg = "Requested start time (" + str(start.to_sec()) + ") is too low! First msg available at " + str(t.to_sec()) + " (diff: " + str(dif.to_sec()) + '). ' 
                             self.notes += msg
                             rospy.logwarn(msg) 
                         
