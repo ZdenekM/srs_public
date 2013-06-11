@@ -2,7 +2,7 @@
 import roslib; roslib.load_manifest('srs_user_tests')
 
 import rospy
-from math import fabs, sqrt
+from math import fabs, sqrt, pi
 import numpy
 import tf
 import rosbag
@@ -326,13 +326,21 @@ class TfEval(object):
                                                                                  last_pose.pose.orientation.w],axes='sxyz')
                         
                         
-                        dor = fabs(r - lr)
-                        dop = fabs(p - lp)
-                        doy = fabs(y - ly)
+                        #dor = fabs(r - lr)
+                        #dop = fabs(p - lp)
+                        #doy = fabs(y - ly)
+                        
+                        dor = min((2 * pi) - abs(r - lr), abs(r - lr))
+                        dop = min((2 * pi) - abs(p - lp), abs(p - lp))
+                        doy = min((2 * pi) - abs(y - ly), abs(y - ly))
+                        
+                        if self.debug and doy > 6.0:
+                            
+                            print "y: " + str(y) + ", ly: " + str(ly)
                         
                         
                         # if there is any change in position/orientation, lets do some stuff
-                        if path_len > self.last_path_len or dor > 0.0 or dop > 0.0 or doy > 0.0:
+                        if (path_len - self.last_path_len) > 0.001 or dor > 0.001 or dop > 0.001 or doy > 0.001:
                         
                             if self.change==False:
                                 
@@ -345,6 +353,7 @@ class TfEval(object):
                             self.change_last_time = t
                             
                             rotations += doy
+                                
                             last_pose = np
                             self.last_path_len = path_len
                             
