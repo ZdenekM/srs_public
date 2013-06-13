@@ -219,6 +219,9 @@ class TfEval(object):
         
         changes = rospy.Duration(0)
         
+        #self.change = False
+        #self.change_last_time = rospy.Time(0)
+        
         
         if self.debug:
             
@@ -313,7 +316,7 @@ class TfEval(object):
                             continue
                         
                         pdist = sqrt((np.pose.position.x - last_pose.pose.position.x)**2 + (np.pose.position.y - last_pose.pose.position.y)**2 + (np.pose.position.z - last_pose.pose.position.z)**2)
-                        path_len += pdist
+                        #path_len += pdist
                         
                         (r, p, y) = tf.transformations.euler_from_quaternion([np.pose.orientation.x,
                                                                              np.pose.orientation.y,
@@ -339,15 +342,24 @@ class TfEval(object):
                             print "y: " + str(y) + ", ly: " + str(ly)
                         
                         
-                        # if there is any change in position/orientation, lets do some stuff
-                        if (path_len - self.last_path_len) > 0.001 or dor > 0.001 or dop > 0.001 or doy > 0.001:
+                        #print str(pdist) + ", " + str(dor) + ", " + str(dop) + ", " + str(doy)
                         
-                            if self.change==False:
+                        # if there is any change in position/orientation, lets do some stuff
+                        if pdist > 0.01 or dor > 0.01 or dop > 0.01 or doy > 0.01:
+                        
+                            path_len += pdist
+                        
+                            if self.change is False:
                                 
                                 self.change_occ_time = t
                                 self.change = True
                                 self.intgr = 0
-        
+                                #print "ch_s " + str(t.to_sec())
+                                
+                            #else:
+                                
+                                #print "ch " + str(self.intgr)
+                
                             #cnt = 0
                             self.intgr += 1
                             self.change_last_time = t
@@ -357,9 +369,15 @@ class TfEval(object):
                             last_pose = np
                             self.last_path_len = path_len
                             
+                            #print "ch  "  + str(self.intgr) + ", " + str(self.change) + ", akt: " + str((t).to_sec()) + ", occ: " + str(self.change_occ_time.to_sec()) + ", last: " + str(self.change_last_time.to_sec())
+                            
                         else:
                             
-                            if self.change == True and (t-self.change_last_time) >= rospy.Duration(2.0): #cnt > 50: # 20
+                            #print "chn "  + str(self.intgr) + ", " + str(self.change) +  ", akt: " + str((t).to_sec()) + ", occ: " + str(self.change_occ_time.to_sec()) + ", last: " + str(self.change_last_time.to_sec())
+                            
+                            if (self.change is True) and ((t-self.change_last_time) >= rospy.Duration(0.5)): #cnt > 50: # 20
+                                
+                                #print "ch_e " + str(t.to_sec())
                                 
                                 if self.intgr > 1:
                                 
